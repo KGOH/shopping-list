@@ -1,0 +1,16 @@
+<form>
+  <mat-form-field>
+    <input type="text"
+           placeholder="Pick one"
+           aria-label="Number"
+           matInput
+           name="drug"
+           [(ngModel)]="schedule.drug"
+           [matAutocomplete]="auto">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let drug of filteredDrugs | async" [value]="drug">
+        {{drug.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

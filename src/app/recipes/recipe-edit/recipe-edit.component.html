@@ -5,6 +5,9 @@
   <div class="form-row">
     <label for="description">Описание</label><textarea id="description" name="description" [(ngModel)]="recipe.description" required minlength="1"></textarea>
   </div>
+  <div class="schedules">
+    <app-schedule [schedule]="schedule"></app-schedule>
+  </div>
   <div class="buttons">
     <input type="submit" [disabled]="!editForm.form.valid" value="Сохранить">
   </div>
