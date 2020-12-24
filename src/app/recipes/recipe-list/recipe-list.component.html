@@ -1,3 +1,6 @@
-<div *ngFor="let recipe of recipes">
+<div *ngFor="let recipe of recipes" class="recipe-list">
   <app-recipe [recipe]="recipe"></app-recipe>
+</div>
+<div class="toolbar">
+  <a class="add-new-recipe" routerLink="new-recipe">Add New Recipe</a>
 </div>

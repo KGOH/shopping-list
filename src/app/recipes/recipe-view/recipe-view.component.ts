@@ -3,10 +3,10 @@ import {Recipe} from '../../domain/Recipe';
 
 @Component({
   selector: 'app-recipe',
-  templateUrl: './recipe.component.html',
-  styleUrls: ['./recipe.component.scss']
+  templateUrl: './recipe-view.component.html',
+  styleUrls: ['./recipe-view.component.scss']
 })
-export class RecipeComponent implements OnInit {
+export class RecipeViewComponent implements OnInit {
   @Input() public recipe!: Recipe;
 
   constructor() { }

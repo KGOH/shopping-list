@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+.form-row {
+  margin: 8px 0px;
+
+  label {
+    display: inline-block;
+    width: 120px;
+    vertical-align: top;
+  }
+
+  textarea, input {
+    width: 200px;
+  }
+}
