@@ -1,4 +1,4 @@
-^{:watch-dirs          ["src"]
+^{:watch-dirs          ["src/cljs"]
   :css-dirs            ["resources/public/css"]
   :ring-server-options {:port 3000}}
 {:main                 shopping-list.core

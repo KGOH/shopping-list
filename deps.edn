@@ -1,6 +1,6 @@
 {:paths ["src/cljs" "resources"]
  :deps {org.clojure/clojurescript {:mvn/version "LATEST"}
-        reagent                   {:mvn/version "LATEST"}}
+        cljs-ajax                 {:mvn/version "LATEST"}}
  :aliases {:dev {:extra-deps {binaryage/devtools        {:mvn/version "LATEST"}
                               com.bhauman/figwheel-main {:mvn/version "LATEST"}}}
            :prod {:main-opts ["-m cljs.main -co prod.cljs.edn -c shopping-list.core"]} }}
