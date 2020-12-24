@@ -45,3 +45,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# cljs
+.cpcache
+.nrepl-port
+resources/public/js/out
+.DS_Store
