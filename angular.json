@@ -33,7 +33,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "resources/public/js/main.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -127,5 +129,8 @@
       }
     }
   },
-  "defaultProject": "shopping-list"
+  "defaultProject": "shopping-list",
+  "cli": {
+    "analytics": "508bffef-ab5f-4bb8-a07b-cb1cfdd9286e"
+  }
 }

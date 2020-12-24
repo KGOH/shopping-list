@@ -1,0 +1,10 @@
+body {
+    margin: 0px;
+    overflow-y: scroll;
+    font-family: 'Noto Serif', serif;
+    font-size: 1.2em;
+}
+.content {
+    width: 56em;
+    margin: 3em auto;
+}
