@@ -21,7 +21,7 @@ export class DrugService {
 
   public searchPackages(drug: Drug): Observable<DrugPackage[]> {
     const results = new AsyncSubject<any>();
-    shopping_list.core.find_drugs(Object.assign({}, drug), (data: any) => { console.log(data); results.next(data); results.complete(); });
+    shopping_list.core.find_drugs(Object.assign({}, drug), (data: any) => { results.next(data); results.complete(); });
     return  results.pipe(map(data => _sortBy(_map(data, item => {
       const drugPackage = Object.assign(new DrugPackage(), item);
       drugPackage.drug = drug;

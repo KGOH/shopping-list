@@ -9,7 +9,6 @@ import {ScheduleService} from '../recipes/schedule.service';
 export class ScheduleEventPipe implements PipeTransform {
 
   transform(value: unknown, ...args: unknown[]): unknown {
-    console.log(value);
     if (!(value instanceof ScheduleEvent)) { return '<wrong value>'; }
     let result = `${value.dosage} ${ScheduleService.formatPlural('доз', value.dosage, 'а', 'ы', '')} ${value.repeatInterval === 1 ? 'каждый день' : `каждые ${value.repeatInterval} ${ScheduleService.formatPlural('дн', value.dosage, '', 'я', 'ей')}`}`;
     if (value.timeOffset === 0) {
