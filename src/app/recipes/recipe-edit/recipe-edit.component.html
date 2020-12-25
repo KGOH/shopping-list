@@ -6,7 +6,7 @@
   <div *ngIf="schedules.length > 0">
     <h3>Schedules</h3>
     <div *ngFor="let schedule of schedules">
-      <div>{{schedule.package.drug.name}}, Форма: {{schedule.package.shortName}}, Дозировка: {{schedule.package.dosage}}</div>
+      <div>{{schedule.package?.drug?.name}}, {{schedule.package?.displayName}}</div>
       <div *ngFor="let event of schedule.events">
         {{event.description}}
       </div>

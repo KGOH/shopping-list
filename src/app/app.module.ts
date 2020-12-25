@@ -14,6 +14,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { RecipeDataComponent } from './recipes/recipe-data/recipe-data.component';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { RecipeDataComponent } from './recipes/recipe-data/recipe-data.component
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     ReactiveFormsModule
   ],
   providers: [],

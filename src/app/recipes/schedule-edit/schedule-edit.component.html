@@ -9,28 +9,22 @@
              formControlName="drug"
              required
              [matAutocomplete]="auto">
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="drugName">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="drugName" (optionSelected)="onDrugSelected($event)">
         <mat-option *ngFor="let drug of filteredDrugs | async" [value]="drug">
           {{drug.name}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
     <mat-form-field>
-      <input type="text"
-             placeholder="Упаковка"
-             aria-label="Number"
-             matInput
-             formControlName="drug"
-             required
-             [matAutocomplete]="drugPackageAutocomplete">
-      <mat-autocomplete autoActiveFirstOption #drugPackageAutocomplete="matAutocomplete" [displayWith]="drugPackageName">
+      <mat-select [(value)]="selectedDrugPackage">
+        <mat-label>Упаковка</mat-label>
         <mat-option *ngFor="let drugPackage of filteredDrugPackages | async" [value]="drugPackage">
-          {{drugPackage.name}}
+          {{drugPackage.displayName}}
         </mat-option>
-      </mat-autocomplete>
+      </mat-select>
     </mat-form-field>
   </p>
-  <p>
+  <p *ngIf="selectedDrugPackage">
     <mat-form-field>
       <input type="text"
              class="schedule-input"

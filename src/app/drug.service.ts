@@ -19,11 +19,7 @@ export class DrugService {
     return results.pipe(map(data => _sortBy(_map(data.results, item => new Drug(item.id, item.name, item.name_en)), 'name')));
   }
 
-  public searchPackages(drug: Drug|any, value: string): Observable<DrugPackage[]> {
-    if (!(drug instanceof Drug)) {
-      return of([]);
-    }
-
+  public searchPackages(drug: Drug): Observable<DrugPackage[]> {
     const results = new AsyncSubject<any>();
     shopping_list.core.find_drugs(Object.assign({}, drug), (data: any) => { console.log(data); results.next(data); results.complete(); });
     return  results.pipe(map(data => _sortBy(_map(data, item => {
