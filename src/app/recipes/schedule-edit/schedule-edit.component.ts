@@ -24,7 +24,6 @@ export class ScheduleEditComponent implements OnInit, DoCheck {
   selectedDrugPackage: DrugPackage|null = null;
   private drugSubject: BehaviorSubject<Drug|null> = new BehaviorSubject<Drug|null>(null);
   private drugControl = new FormControl();
-  private drugPackageControl = new FormControl();
   public scheduleControl = new FormControl();
   public form = new FormGroup({
     drug: this.drugControl
@@ -67,8 +66,9 @@ export class ScheduleEditComponent implements OnInit, DoCheck {
   }
   checkAutoAddScheduleEvent(): void {
     if (this.drugControl.value && this.scheduleService.generateSuggestions(this.scheduleControl.value).length === 0) {
-      const schedule = this.scheduleService.createScheduleEvent(this.scheduleControl.value);
-      this.createScheduleEvent.emit(schedule);
+      const scheduleEvent = this.scheduleService.createScheduleEvent(this.scheduleControl.value);
+      this.schedule.events.push(scheduleEvent);
+      console.log(this.schedule);
       this.scheduleControl.setValue('');
     }
   }

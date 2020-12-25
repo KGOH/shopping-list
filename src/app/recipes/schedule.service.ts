@@ -10,6 +10,16 @@ export class ScheduleService {
 
   constructor() { }
 
+  static formatPlural(base: string, n: number, single: string, few: string, other: string): string {
+    if (n === 1) {
+      return base + single;
+    } else if (this.isFew(n)) {
+      return base + few;
+    } else {
+      return base + other;
+    }
+  }
+
   private static isFew(count: number): boolean {
     if (count >= 5 && count <= 20) { return false; }
     count %= 10;
@@ -139,11 +149,11 @@ export class ScheduleService {
   createScheduleEvent(spec: string): ScheduleEvent {
     const match = ScheduleService.regex.exec(spec);
     const groups = match && match.groups || {};
-    return {
+    return Object.assign(new ScheduleEvent(), {
       dosage: toNumber(groups.dosageCount),
       repeatInterval: ScheduleService.parseRepeatInterval(groups.intervalDays),
       timeOffset: ScheduleService.parseTimeOffset(groups.eventAt, groups.eventBefore, groups.eventAfter),
       type: ScheduleService.parseEventType(groups.eventName)
-    } as ScheduleEvent;
+    });
   }
 }

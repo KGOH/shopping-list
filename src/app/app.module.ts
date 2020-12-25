@@ -15,6 +15,7 @@ import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { RecipeDataComponent } from './recipes/recipe-data/recipe-data.component';
 import {MatSelectModule} from '@angular/material/select';
+import { ScheduleEventPipe } from './filters/schedule-event.pipe';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {MatSelectModule} from '@angular/material/select';
     RecipeListComponent,
     RecipeEditComponent,
     ScheduleEditComponent,
-    RecipeDataComponent
+    RecipeDataComponent,
+    ScheduleEventPipe
   ],
   imports: [
     BrowserModule,

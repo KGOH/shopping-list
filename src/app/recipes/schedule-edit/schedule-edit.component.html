@@ -24,7 +24,11 @@
       </mat-select>
     </mat-form-field>
   </p>
-  <p *ngIf="selectedDrugPackage">
+  <div *ngIf="selectedDrugPackage">
+    <h3>Расписания</h3>
+    <div *ngFor="let event of schedule.events">
+      {{event|scheduleEvent}}
+    </div>
     <mat-form-field>
       <input type="text"
              class="schedule-input"
@@ -42,7 +46,7 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-  </p>
+  </div>
   <p class="buttons">
     <input type="submit" value="Добавить">
   </p>
