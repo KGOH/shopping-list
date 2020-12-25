@@ -15,4 +15,9 @@ export class RecipeListComponent implements OnInit {
   ngOnInit(): void {
     this.recipes = this.recipeService.recipes;
   }
+
+  clearRecipes(): boolean {
+    this.recipeService.clear();
+    return false;
+  }
 }

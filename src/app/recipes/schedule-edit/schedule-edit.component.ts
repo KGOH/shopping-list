@@ -68,12 +68,14 @@ export class ScheduleEditComponent implements OnInit, DoCheck {
     if (this.drugControl.value && this.scheduleService.generateSuggestions(this.scheduleControl.value).length === 0) {
       const scheduleEvent = this.scheduleService.createScheduleEvent(this.scheduleControl.value);
       this.schedule.events.push(scheduleEvent);
-      console.log(this.schedule);
       this.scheduleControl.setValue('');
     }
   }
-  onSubmit(): void {
+  onSubmit(): boolean {
+    if (this.selectedDrugPackage === null) { return false; }
+    this.schedule.package = this.selectedDrugPackage;
     this.createSchedule.emit(this.schedule);
+    return true;
   }
 
   onDrugSelected($event: MatAutocompleteSelectedEvent): void {

@@ -48,6 +48,6 @@
     </mat-form-field>
   </div>
   <p class="buttons">
-    <input type="submit" value="Добавить">
+    <input type="submit" value="Добавить" [disabled]="!selectedDrugPackage || this.schedule.events.length === 0">
   </p>
 </form>

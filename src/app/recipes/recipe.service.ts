@@ -17,4 +17,9 @@ export class RecipeService {
     this.recipes.push(recipe);
     this.storage.set(STORAGE_KEY, this.recipes);
   }
+
+  public clear(): void {
+    this.recipes.splice(0, this.recipes.length);
+    this.storage.set(STORAGE_KEY, this.recipes);
+  }
 }

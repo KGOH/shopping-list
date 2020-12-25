@@ -8,7 +8,7 @@
     <div *ngFor="let schedule of schedules">
       <div>{{schedule.package?.drug?.name}}, {{schedule.package?.displayName}}</div>
       <div *ngFor="let event of schedule.events">
-        {{event.description}}
+        {{event|scheduleEvent}}
       </div>
     </div>
     <a (click)="addSchedule()" href="#">Add new schedule.</a>
