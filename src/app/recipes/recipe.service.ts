@@ -35,7 +35,7 @@ export class RecipeService {
 
   private convertCourse(courseObj: any): Course {
     const course: Course = Object.assign(new Course(), courseObj);
-    course.startDate ||= new Date();
+    course.startDate = (course.startDate && new Date(course.startDate)) || new Date();
     course.schedules = _map(course.schedules, x => this.convertSchedule(x));
     return course;
   }
