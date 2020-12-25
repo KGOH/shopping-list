@@ -34,7 +34,14 @@
   (let [trade-name-id (get (js->clj drug) "id")]
     (letfn [(handle-smnn-resp [smnn-resp]
               (->> (get smnn-resp "results")
-                   (filter #(get % "smnn_is_active"))))
+                   (filter #(get % "smnn_is_active"))
+                   (mapv resp-row->drug-package)))
+
+            (resp-row->drug-package [row]
+              {:drug      drug
+               :shortName (get row "smnn_pe_note")
+               :fullName  (get row "std_lf_name")
+               :dosage    (get row "std_dosage")})
 
             #_(search-klp [smnn-resp]
               (search* "restsearch-klp"
