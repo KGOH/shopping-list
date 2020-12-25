@@ -85,12 +85,12 @@ export class ScheduleEditComponent implements OnInit, DoCheck {
   ngDoCheck(): void {
     if (this.selectedDrugPackage === null || this.filteredDrugPackages.value.indexOf(this.selectedDrugPackage) < 0) {
       this.selectedDrugPackage = this.filteredDrugPackages.value[0];
+      this.schedule.package = this.selectedDrugPackage;
     }
   }
 
   onPackageSelected(drugPackage: DrugPackage|null): void {
     if (drugPackage === null) { return; }
-    this.schedule.package = drugPackage;
     this.scheduleService.recalculateSchedules(this.schedule, drugPackage);
   }
 }

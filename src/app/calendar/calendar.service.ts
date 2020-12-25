@@ -4,8 +4,8 @@ import {RecipeService} from '../recipes/recipe.service';
 declare const shopping_list: any;
 
 export class CalendarEvent {
-  event: string;
-  drugs: string[];
+  event!: string;
+  drugs!: string[];
 }
 
 @Injectable({

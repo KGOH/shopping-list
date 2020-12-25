@@ -1,7 +1,21 @@
+@import '~@angular/material/theming';
+
 :host {
   display: block;
-  padding: 8px 16px;
 }
 
 .header {
+  background-color: map-get($mat-deep-purple, 600);
+
+  li {
+    display: inline-block;
+  }
+
+  &, a {
+    color: mat-contrast($mat-deep-purple, 600);
+  }
+}
+
+.header, .content {
+  padding: 8px 16px;
 }
