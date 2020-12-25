@@ -14,7 +14,7 @@
     </mat-form-field>
   </p>
   <p *ngIf="schedules.length > 0; else noSchedules">
-    <app-schedule [schedule]="schedules[0]"></app-schedule>
+<!--    <app-schedule [schedule]="schedules[0]"></app-schedule>-->
   </p>
   <ng-template #noSchedules>
     <p>
@@ -22,7 +22,7 @@
     </p>
   </ng-template>
   <div class="buttons">
-    <input type="submit" [disabled]="!editForm.form.valid" value="Сохранить">
+    <input type="submit" [disabled]="!editForm.form.valid || this.schedules.length == 0" value="Сохранить">
   </div>
 </form>
 

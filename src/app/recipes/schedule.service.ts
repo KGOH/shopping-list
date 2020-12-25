@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import {toNumber, map as _map, filter as _filter, isArray} from 'lodash-es';
+import {Injectable} from '@angular/core';
+import {filter as _filter, isArray, map as _map, toNumber} from 'lodash-es';
+import {ScheduleEvent, ScheduleEventType} from '../domain/Schedule';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,43 @@ export class ScheduleService {
     return [' завтрака', ' полдника', ' обеда', ' ужина'];
   }
 
+  private static parseTimeOffset(eventAt: string|undefined, eventBefore: string|undefined, eventAfter: string|undefined): number {
+    if (eventBefore !== undefined) {
+      return -toNumber(eventBefore);
+    }
+    if (eventAfter !== undefined) {
+      return toNumber(eventAfter);
+    }
+    switch (eventAt) {
+      case 'до':
+        return -1;
+      case 'после':
+        return 1;
+      case 'во время':
+      default:
+        return 0;
+    }
+  }
+
+  private static parseEventType(eventName: string): ScheduleEventType {
+    switch (eventName) {
+      case 'завтрака':
+      default:
+        return ScheduleEventType.Breakfast;
+      case 'полдника':
+        return ScheduleEventType.Lunch;
+      case 'обеда':
+        return ScheduleEventType.Dinner;
+      case 'ужина':
+        return ScheduleEventType.Supper;
+    }
+  }
+
+
+  private static parseRepeatInterval(intervalDays: string|undefined): number {
+    return intervalDays !== undefined ? toNumber(intervalDays) : 1;
+  }
+
   generateSuggestions(text: string): [string, string][] {
     const match = ScheduleService.regex.exec(text);
     const prefix = match && match[0] || '';
@@ -96,5 +134,16 @@ export class ScheduleService {
     }
 
     return [];
+  }
+
+  createScheduleEvent(spec: string): ScheduleEvent {
+    const match = ScheduleService.regex.exec(spec);
+    const groups = match && match.groups || {};
+    return {
+      dosage: toNumber(groups.dosageCount),
+      repeatInterval: ScheduleService.parseRepeatInterval(groups.intervalDays),
+      timeOffset: ScheduleService.parseTimeOffset(groups.eventAt, groups.eventBefore, groups.eventAfter),
+      type: ScheduleService.parseEventType(groups.eventName)
+    } as ScheduleEvent;
   }
 }

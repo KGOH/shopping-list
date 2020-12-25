@@ -12,8 +12,9 @@ import {Course} from '../../domain/Course';
   styleUrls: ['./recipe-edit.component.scss']
 })
 export class RecipeEditComponent implements OnInit {
-  public schedules: Schedule[] = [];
-  public form = new FormGroup({
+  schedules: Schedule[] = [];
+  newSchedule = false;
+  form = new FormGroup({
     issuer: new FormControl(),
     description: new FormControl()
   });
@@ -27,5 +28,8 @@ export class RecipeEditComponent implements OnInit {
     recipe.courses = [{schedules: this.schedules} as Course];
     this.recipeService.addRecipe(recipe);
     return this.router.navigate(['recipes']);
+  }
+
+  onScheduleAdded(schedule: Schedule): void {
   }
 }

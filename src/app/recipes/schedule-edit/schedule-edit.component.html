@@ -6,6 +6,7 @@
              placeholder="Медикамент"
              aria-label="Number"
              (change)="checkAutoSubmit()"
+             (keydown.escape)="checkCancel(auto.isOpen)"
              matInput
              formControlName="drug"
              [matAutocomplete]="auto">
@@ -23,6 +24,7 @@
              placeholder="Расписание"
              aria-label="Number"
              (change)="checkAutoSubmit()"
+             (keydown.escape)="checkCancel(scheduleAutocomplete.isOpen)"
              #scheduleInput
              matInput
              [formControl]="scheduleControl"
