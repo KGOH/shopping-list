@@ -146,6 +146,25 @@
        clj->js))
 
 
+(defn get-num-ending [number {:keys [nom gen plu]}]
+  (let [num (rem (Math/abs number) 100)]
+    (cond
+      (str/includes? (str number) ".") gen
+      (<= 11 num 19)                   plu
+      :else
+      (case (rem num 10)
+        1       nom
+        (2 3 4) gen
+        plu))))
+
+
+(def dose-forms {:nom "доза", :gen "дозы", :plu "доз"})
+
+(def minute-forms {:nom "минута", :gen "минуты", :plu "минут"})
+
+(def hour-forms {:nom "час", :gen "часа", :plu "часов"})
+
+
 (defn format-event-package [{:keys [drug] :as package} event]
   (->> [(:name drug)
         (:dosage package)
@@ -153,7 +172,7 @@
                  (:fullName package))
              ",")
         (:dosage event)
-        "шт."]
+        (get-num-ending (:dosage event) dose-forms)]
        (remove nil?)
        (str/join \space)
        str/capitalize))
@@ -175,7 +194,7 @@
             :at     "в"
             :after  "через"
             nil)
-          (when offset [offset "минут"])
+          (when offset [offset (get-num-ending offset minute-forms)])
           (case preposition
             :before "до"
             :at     nil
@@ -186,15 +205,7 @@
             (str "а"))
 
           (when-let [t (and num? (:timeOfDay event))]
-            (cond
-              (or (= 0 t) (<= 5 t 20))
-              "часов"
-
-              (= 1 (mod (Math/abs t) 10))
-              "час"
-
-              (or (<= 2 (mod (Math/abs t) 10) 4))
-              "часа"))]
+            (get-num-ending t hour-forms))]
          flatten
          (remove nil?)
          (str/join \space)
