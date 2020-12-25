@@ -16,7 +16,6 @@ export class RecipeService {
 
   constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {
     this.recipes = _map(this.storage.get(STORAGE_KEY) || [], x => this.convertRecipe(x));
-    console.log(this.recipes);
   }
   public addRecipe(recipe: Recipe): void {
     this.recipes.push(recipe);

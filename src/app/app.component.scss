@@ -1,12 +1,10 @@
-@import '~@angular/material/theming';
-
 :host {
   display: block;
 }
 
 .header {
-  background-color: map-get($mat-deep-orange, 900);
-  color: mat-contrast($mat-deep-orange, 900);
+  background-color: #bf360c;
+  color: white;
 
   li {
     display: inline-block;
@@ -18,7 +16,7 @@
 
   nav {
     a {
-      color: mat-contrast($mat-deep-orange, 900);
+      color: white;
       display: inline-block;
       padding: 0 8px;
       font-size: 20px;
