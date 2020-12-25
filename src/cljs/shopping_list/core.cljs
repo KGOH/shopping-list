@@ -1,7 +1,45 @@
 (ns ^:figwheel-hooks shopping-list.core
   (:require [ajax.core :refer [GET]]
             [com.rpl.specter :as sp]
+            [goog.object :as gobject]
             [clojure.string :as str]))
+
+
+(defn my-js->clj
+  "Recursively transforms (Java/Type)Script arrays into ClojureScript
+  vectors, and (Java/Type)Script objects into ClojureScript maps.  With
+  option ':keywordize-keys true' will convert object fields from
+  strings to keywords."
+  ([x] (my-js->clj x :keywordize-keys false))
+  ([x & opts]
+    (let [{:keys [keywordize-keys]} opts
+          keyfn (if keywordize-keys keyword str)
+          f (fn thisfn [x]
+              (cond
+                (satisfies? IEncodeClojure x)
+                (-js->clj x (apply array-map opts))
+
+                (seq? x)
+                (doall (map thisfn x))
+
+                (map-entry? x)
+                (MapEntry. (thisfn (key x)) (thisfn (val x)) nil)
+
+                (coll? x)
+                (into (empty x) (map thisfn) x)
+
+                (array? x)
+                (persistent!
+                 (reduce #(conj! %1 (thisfn %2))
+                         (transient []) x))
+
+                (or (identical? (type x) js/Object)
+                    (= "object" (goog/typeOf x)))
+                (persistent!
+                 (reduce (fn [r k] (assoc! r (keyfn k) (thisfn (gobject/get x k))))
+                         (transient {}) (js-keys x)))
+                :else x))]
+      (f x))))
 
 
 (defmulti esklp-endpoint (fn [endpoint _] endpoint))
@@ -24,7 +62,7 @@
 
 
 (defn ^:export search [endpoint args]
-  (search* endpoint (-> (js->clj args :keywordize-keys true)
+  (search* endpoint (-> (my-js->clj args :keywordize-keys true)
                         (update :handler comp clj->js))))
 
 
@@ -33,7 +71,7 @@
 
 
 (defn ^:export find-drugs [drug callback]
-  (let [trade-name-id (get (js->clj drug) "id")]
+  (let [trade-name-id (get (my-js->clj drug) "id")]
     (letfn [(handle-smnn-resp [smnn-resp]
               (->> (get smnn-resp "results")
                    (filter #(get % "smnn_is_active"))
@@ -73,11 +111,20 @@
 
 
 (defn ^:export reeval-schedule [schedule* new-package*]
-  (let [old-schedule (js->clj schedule* :keywordize-keys true)
-        new-package  (js->clj new-package* :keywordize-keys true)
+  (let [old-schedule (my-js->clj schedule* :keywordize-keys true)
+        new-package  (my-js->clj new-package* :keywordize-keys true)
 
         new-dosage (get-dosage new-package)
         old-dosage (get-dosage (:package old-schedule))
+
+        _ (prn new-dosage)
+        _ (prn (type new-dosage))
+        _ (prn schedule*)
+        _ (prn old-schedule)
+        _ (prn (:package old-schedule))
+        _ (prn (type (:package old-schedule)))
+        _ (prn old-dosage)
+        _ (prn (type old-dosage))
 
         new-schedule (->> (assoc old-schedule :package new-package)
                           (sp/transform [:events sp/MAP-VALS :dosage]
@@ -132,7 +179,7 @@
 
 
 (defn ^:export schedule-for-a-day [date recipies*]
-  (->> (js->clj recipies* :keywordize-keys true)
+  (->> (my-js->clj recipies* :keywordize-keys true)
        collect-events
        (filterv #(and (<= date (or (:end-date %) date))
                       (>= date (or (:start-date %) date))
@@ -213,7 +260,7 @@
 
 
 (defn ^:export formatted-schedule-for-a-day [date recipies*]
-  (->> (js->clj (schedule-for-a-day date recipies*) :keywordize-keys true)
+  (->> (my-js->clj (schedule-for-a-day date recipies*) :keywordize-keys true)
        (mapv #(-> %
                   (update :event format-event-time)
                   (update :package format-event-package (:event %))))
