@@ -17,6 +17,8 @@ export class ScheduleEventPipe implements PipeTransform {
       result += ` через ${value.timeOffset} ${ScheduleService.formatPlural('минут', value.dosage, 'у', 'ы', '')} после`;
     } else if (value.timeOffset > 0) {
       result += ' после';
+    } else if (value.timeOffset >= -1) {
+      result += ' до';
     } else {
       result += ` за ${-value.timeOffset} ${ScheduleService.formatPlural('минут', value.dosage, 'у', 'ы', '')} до`;
     }
