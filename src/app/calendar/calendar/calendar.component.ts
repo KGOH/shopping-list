@@ -22,6 +22,9 @@ export class CalendarComponent implements OnInit {
   constructor(private calendarService: CalendarService) { }
 
   ngOnInit(): void {
-    this.days = [new Day(new Date(), 'Сегодня'), new Day(new Date(new Date().getDate() + 1), 'Завтра')];
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    this.days = [new Day(today, 'Сегодня'), new Day(tomorrow, 'Завтра')];
   }
 }
