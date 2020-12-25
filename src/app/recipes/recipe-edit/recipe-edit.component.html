@@ -1,14 +1,28 @@
-<form (ngSubmit)="onSubmit()" #editForm="ngForm">
-  <div class="form-row">
-    <label for="issuer">Кем выдан</label><input id="issuer" name="issuer" [(ngModel)]="recipe.issuer" type="text" required minlength="1">
-  </div>
-  <div class="form-row">
-    <label for="description">Описание</label><textarea id="description" name="description" [(ngModel)]="recipe.description" required minlength="1"></textarea>
-  </div>
-  <div class="schedules">
-    <app-schedule [schedule]="schedule"></app-schedule>
-  </div>
+<h2>New Recipe</h2>
+
+<form (ngSubmit)="onSubmit()" #editForm="ngForm" [formGroup]="form">
+  <p>
+    <mat-form-field>
+      <mat-label>Кем выдан</mat-label>
+      <input matInput formControlName="issuer" type="text" required>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Описание</mat-label>
+      <textarea matInput formControlName="description" required></textarea>
+    </mat-form-field>
+  </p>
+  <p *ngIf="schedules.length > 0; else noSchedules">
+    <app-schedule [schedule]="schedules[0]"></app-schedule>
+  </p>
+  <ng-template #noSchedules>
+    <p>
+      You need to <a routerLink="schedules/new">add</a> at least one schedule.
+    </p>
+  </ng-template>
   <div class="buttons">
     <input type="submit" [disabled]="!editForm.form.valid" value="Сохранить">
   </div>
 </form>
+
