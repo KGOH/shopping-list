@@ -6,13 +6,15 @@
   <div *ngIf="schedules.length > 0">
     <h3>Schedules</h3>
     <div *ngFor="let schedule of schedules">
-      schedule events {{schedule.events.length}}
+      <div>{{schedule.package.drug.name}}, Форма: {{schedule.package.shortName}}, Дозировка: {{schedule.package.dosage}}</div>
+      <div *ngFor="let event of schedule.events">
+        {{event.description}}
+      </div>
     </div>
     <a (click)="addSchedule()" href="#">Add new schedule.</a>
   </div>
   <div class="buttons">
-    <input type="submit" (click)="recipeData.doSubmit()" [disabled]="!valid"
-           value="Сохранить">
+    <input type="submit" (click)="recipeData.doSubmit()" [disabled]="!valid" value="Сохранить">
   </div>
 </div>
 <div *ngIf="mode == 'schedule'">

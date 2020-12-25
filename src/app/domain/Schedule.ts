@@ -15,6 +15,10 @@ export class ScheduleEvent {
   public timeOfDay: number | undefined = undefined; // if provided then explicit time in hours
   public repeatInterval = 1; // in days, 1 - every day, 2 - every two days
   public dosage = 1; // how much units
+
+  get description(): string {
+    return 'event description';
+  }
 }
 
 export enum ScheduleEventType {

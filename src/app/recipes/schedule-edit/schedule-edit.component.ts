@@ -1,9 +1,9 @@
 import {Component, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Schedule, ScheduleEvent} from '../../domain/Schedule';
 import {Drug, DrugPackage} from '../../domain/Drug';
-import {from, Observable} from 'rxjs';
+import {combineLatest, concat, from, Observable} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
-import {map, mergeMap, startWith} from 'rxjs/operators';
+import {combineAll, concatAll, map, mergeMap, startWith} from 'rxjs/operators';
 import {DrugService} from '../../drug.service';
 import {ScheduleService} from '../schedule.service';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
@@ -25,11 +25,13 @@ export class ScheduleEditComponent implements OnInit {
   schedule = new Schedule();
   private drugPackage: DrugPackage = new DrugPackage();
   private drugControl = new FormControl();
+  private drugPackageControl = new FormControl();
   public scheduleControl = new FormControl();
   public form = new FormGroup({
     drug: this.drugControl
   });
   public filteredDrugs: Observable<Drug[]> = from([[]]);
+  public filteredDrugPackages: Observable<DrugPackage[]> = from([[]]);
   public filteredSchedules: Observable<[string, string][]> = from([]);
   constructor(private drugService: DrugService, private scheduleService: ScheduleService) { }
 
@@ -38,6 +40,13 @@ export class ScheduleEditComponent implements OnInit {
       startWith(''),
       mergeMap(value => this.drugService.searchByName(value))
     );
+    this.filteredDrugPackages = combineLatest([
+      this.drugPackageControl.valueChanges.pipe(startWith(this.drugPackageControl.value as string || '')),
+      this.drugControl.valueChanges.pipe(startWith(''))
+    ]).pipe(
+      map(x => x[0]),
+      mergeMap(value => this.drugService.searchPackages(this.drugControl.value, value))
+    );
     this.filteredSchedules = this.scheduleControl.valueChanges.pipe(
       startWith(this.scheduleControl.value as string || ''),
       map(value => this.scheduleService.generateSuggestions(value))
@@ -45,6 +54,9 @@ export class ScheduleEditComponent implements OnInit {
   }
   public drugName(drug: Drug): string {
     return drug && drug.name;
+  }
+  public drugPackageName(drugPackage: DrugPackage): string {
+    return drugPackage && drugPackage.displayName;
   }
 
   checkCancel(ignore: boolean): void {

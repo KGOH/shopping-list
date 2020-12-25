@@ -8,4 +8,8 @@ export class DrugPackage {
   public shortName!: string;
   public fullName!: string;
   public dosage!: string;
+
+  get displayName(): string {
+    return `Форма: ${this.shortName} Дозировка: ${this.dosage}`;
+  }
 }

@@ -5,14 +5,27 @@
       <input type="text"
              placeholder="Медикамент"
              aria-label="Number"
-             (keydown.escape)="checkCancel(auto.isOpen)"
              matInput
              formControlName="drug"
              required
              [matAutocomplete]="auto">
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="drugName" (optionSelected)="checkAutoAddScheduleEvent()">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="drugName">
         <mat-option *ngFor="let drug of filteredDrugs | async" [value]="drug">
           {{drug.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text"
+             placeholder="Упаковка"
+             aria-label="Number"
+             matInput
+             formControlName="drug"
+             required
+             [matAutocomplete]="drugPackageAutocomplete">
+      <mat-autocomplete autoActiveFirstOption #drugPackageAutocomplete="matAutocomplete" [displayWith]="drugPackageName">
+        <mat-option *ngFor="let drugPackage of filteredDrugPackages | async" [value]="drugPackage">
+          {{drugPackage.name}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
