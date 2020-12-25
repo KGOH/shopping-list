@@ -162,8 +162,12 @@ export class ScheduleService {
 
   recalculateSchedules(schedule: Schedule, drugPackage: DrugPackage): void {
     const scheduleObj = Object.assign({}, schedule);
-    console.log(scheduleObj, Object.assign({}, drugPackage));
-    const modifiedSchedule = shopping_list.core.reeval_schedule(scheduleObj, Object.assign({}, drugPackage));
+    for (let i = 0; i < scheduleObj.events.length; i++) {
+      scheduleObj.events[i] = Object.assign({}, scheduleObj.events[i]);
+    }
+    const drugPackageObj = Object.assign({}, drugPackage, {drug: Object.assign({}, drugPackage.drug)});
+    console.log(scheduleObj, drugPackageObj);
+    const modifiedSchedule = shopping_list.core.reeval_schedule(scheduleObj, drugPackageObj);
     console.log(modifiedSchedule);
   }
 }
