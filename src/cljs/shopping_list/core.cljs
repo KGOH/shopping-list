@@ -1,5 +1,7 @@
 (ns ^:figwheel-hooks shopping-list.core
-  (:require [ajax.core :refer [GET]]))
+  (:require [ajax.core :refer [GET]]
+            [com.rpl.specter :as sp]
+            [clojure.string :as str]))
 
 
 (defmulti esklp-endpoint (fn [endpoint _] endpoint))
@@ -59,12 +61,25 @@
                 :handler (comp callback clj->js handle-smnn-resp)}))))
 
 
-(defn ^:export reeval-schedule [schedule* new-dosage]
-  (let [schedule (js->clj schedule* :keywordize-keys true)
-        update-dosage (fn [schedule-event]
-                        (-> schedule-event
-                            (assoc-in [:dosage :value] new-dosage)
-                            (update-in [:dosage :count] * (/ (get-in schedule-event [:dosage :value])
-                                                             new-dosage))))
-        new-schedule (update schedule :events (partial mapv update-dosage))]
+(defn parse-int [s]
+  (js/parseInt s 10))
+
+
+(defn get-dosage [package]
+  (-> (get package :dosage "")
+      (str/split #" " 2)
+      first
+      parse-int))
+
+
+(defn ^:export reeval-schedule [schedule* new-package*]
+  (let [old-schedule (js->clj schedule* :keywordize-keys true)
+        new-package  (js->clj new-package* :keywordize-keys true)
+
+        new-dosage (get-dosage new-package)
+        old-dosage (get-dosage (:package old-schedule))
+
+        new-schedule (->> (assoc old-schedule :package new-package)
+                          (sp/transform [:events sp/MAP-VALS :dosage]
+                                        #(* % (/ old-dosage new-dosage))))]
     (clj->js new-schedule)))
