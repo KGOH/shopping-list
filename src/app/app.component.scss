@@ -21,7 +21,7 @@
       color: mat-contrast($mat-deep-orange, 900);
       display: inline-block;
       padding: 0 8px;
-      font-size: 17px;
+      font-size: 20px;
       text-decoration: none;
     }
 
@@ -29,11 +29,6 @@
       text-decoration: underline;
     }
   }
-}
-
-.content {
-  background-color: map-get($mat-orange, 200);
-  margin-bottom: 0;
 }
 
 .header, .content {

@@ -1,11 +1,13 @@
 <div class="recipe">
-  <div>
-    Выдан: {{recipe.issuer}}
-    Описание: {{recipe.description}}
+  <div class="recipe-title">
+    {{recipe.description}}
   </div>
-  <div *ngFor="let schedule of recipe.course?.schedules">
-    {{schedule.package?.drug?.name}}, {{schedule.package?.displayName}}
-    <div *ngFor="let event of schedule.events">
+  <div class="recipe-issuer">
+    выдан {{recipe.issuer}}
+  </div>
+  <div *ngFor="let schedule of recipe.course?.schedules" class="recipe-schedule">
+    <span class="package-name">{{schedule.package?.drug?.name}}, {{schedule.package?.displayName}}</span>
+    <div *ngFor="let event of schedule.events" class="event-name">
       {{event|scheduleEvent}}
     </div>
   </div>
