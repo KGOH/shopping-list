@@ -34,7 +34,8 @@
                          (transient []) x))
 
                 (or (identical? (type x) js/Object)
-                    (= "object" (goog/typeOf x)))
+                    (and (= "object" (goog/typeOf x))
+                         (not (= (type x) (type #inst"2020")))))
                 (persistent!
                  (reduce (fn [r k] (assoc! r (keyfn k) (thisfn (gobject/get x k))))
                          (transient {}) (js-keys x)))
