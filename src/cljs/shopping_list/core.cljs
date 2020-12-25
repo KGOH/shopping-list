@@ -117,15 +117,6 @@
         new-dosage (get-dosage new-package)
         old-dosage (get-dosage (:package old-schedule))
 
-        _ (prn new-dosage)
-        _ (prn (type new-dosage))
-        _ (prn schedule*)
-        _ (prn old-schedule)
-        _ (prn (:package old-schedule))
-        _ (prn (type (:package old-schedule)))
-        _ (prn old-dosage)
-        _ (prn (type old-dosage))
-
         new-schedule (->> (assoc old-schedule :package new-package)
                           (sp/transform [:events sp/MAP-VALS :dosage]
                                         #(* % (/ old-dosage new-dosage))))]
