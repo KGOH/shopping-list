@@ -8,6 +8,8 @@ import {DrugService} from '../../drug.service';
 import {ScheduleService} from '../schedule.service';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {EventEmitter} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RecipeService} from '../recipe.service';
 
 @Component({
   selector: 'app-schedule-edit',
@@ -15,11 +17,12 @@ import {EventEmitter} from '@angular/core';
   styleUrls: ['./schedule-edit.component.scss']
 })
 export class ScheduleEditComponent implements OnInit {
-  @Input() public schedule!: Schedule;
+  @Output() createSchedule = new EventEmitter<Schedule>();
   @Output() createScheduleEvent = new EventEmitter<ScheduleEvent>();
   @Output() cancel = new EventEmitter<void>();
   @ViewChild('scheduleInput', { read: MatAutocompleteTrigger }) scheduleAutocompleteTrigger!: MatAutocompleteTrigger;
 
+  schedule = new Schedule();
   private drugPackage: DrugPackage = new DrugPackage();
   private drugControl = new FormControl();
   public scheduleControl = new FormControl();
@@ -51,16 +54,19 @@ export class ScheduleEditComponent implements OnInit {
   }
   onScheduleSelected(): void {
     window.requestAnimationFrame(() => {
-      this.checkAutoSubmit();
+      this.checkAutoAddScheduleEvent();
       this.scheduleAutocompleteTrigger.openPanel();
     });
   }
-  checkAutoSubmit(): void {
+  checkAutoAddScheduleEvent(): void {
     if (this.drugControl.value && this.scheduleService.generateSuggestions(this.scheduleControl.value).length === 0) {
       this.drugPackage = {drug: this.drugControl.value} as DrugPackage;
       const schedule = this.scheduleService.createScheduleEvent(this.scheduleControl.value);
       this.createScheduleEvent.emit(schedule);
       this.scheduleControl.setValue('');
     }
+  }
+  onSubmit(): void {
+    this.createSchedule.emit(this.schedule);
   }
 }

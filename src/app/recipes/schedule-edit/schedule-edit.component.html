@@ -1,16 +1,16 @@
 <h2>New Schedule</h2>
-<form [formGroup]="form">
+<form [formGroup]="form" (submit)="onSubmit()">
   <p>
     <mat-form-field>
       <input type="text"
              placeholder="Медикамент"
              aria-label="Number"
-             (change)="checkAutoSubmit()"
              (keydown.escape)="checkCancel(auto.isOpen)"
              matInput
              formControlName="drug"
+             required
              [matAutocomplete]="auto">
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="drugName" (optionSelected)="checkAutoSubmit()">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="drugName" (optionSelected)="checkAutoAddScheduleEvent()">
         <mat-option *ngFor="let drug of filteredDrugs | async" [value]="drug">
           {{drug.name}}
         </mat-option>
@@ -23,7 +23,7 @@
              class="schedule-input"
              placeholder="Расписание"
              aria-label="Number"
-             (change)="checkAutoSubmit()"
+             (change)="checkAutoAddScheduleEvent()"
              (keydown.escape)="checkCancel(scheduleAutocomplete.isOpen)"
              #scheduleInput
              matInput
@@ -35,5 +35,8 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
+  </p>
+  <p class="buttons">
+    <input type="submit" value="Добавить">
   </p>
 </form>

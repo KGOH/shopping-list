@@ -1,0 +1,16 @@
+<h2>New Recipe</h2>
+
+<form (ngSubmit)="onSubmit()" #editForm="ngForm" [formGroup]="form">
+  <p>
+    <mat-form-field>
+      <mat-label>Кем выдан</mat-label>
+      <input matInput formControlName="issuer" type="text" required>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Описание</mat-label>
+      <textarea matInput formControlName="description" required></textarea>
+    </mat-form-field>
+  </p>
+</form>

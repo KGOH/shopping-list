@@ -1,7 +1,8 @@
 import {Course} from './Course';
 
 export class Recipe {
-    public issuer: string|undefined = undefined;
-    public description: string|undefined = undefined;
-    public courses: Course[] = [];
+    issuer = '';
+    description = '';
+    courses: Course[] = [new Course()];
+    get course(): Course { return this.courses[0]; }
 }

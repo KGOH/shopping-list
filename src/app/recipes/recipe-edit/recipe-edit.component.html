@@ -1,28 +1,20 @@
-<h2>New Recipe</h2>
-
-<form (ngSubmit)="onSubmit()" #editForm="ngForm" [formGroup]="form">
-  <p>
-    <mat-form-field>
-      <mat-label>Кем выдан</mat-label>
-      <input matInput formControlName="issuer" type="text" required>
-    </mat-form-field>
+<div [hidden]="mode != 'data'">
+  <app-recipe-data [recipe]="recipe" #recipeData (save)="onRecipeSave()"></app-recipe-data>
+  <p *ngIf="this.schedules.length == 0">
+    You need to <a (click)="addSchedule()" href="#">add</a> at least one schedule.
   </p>
-  <p>
-    <mat-form-field>
-      <mat-label>Описание</mat-label>
-      <textarea matInput formControlName="description" required></textarea>
-    </mat-form-field>
-  </p>
-  <p *ngIf="schedules.length > 0; else noSchedules">
-<!--    <app-schedule [schedule]="schedules[0]"></app-schedule>-->
-  </p>
-  <ng-template #noSchedules>
-    <p>
-      You need to <a routerLink="schedules/new">add</a> at least one schedule.
-    </p>
-  </ng-template>
-  <div class="buttons">
-    <input type="submit" [disabled]="!editForm.form.valid || this.schedules.length == 0" value="Сохранить">
+  <div *ngIf="schedules.length > 0">
+    <h3>Schedules</h3>
+    <div *ngFor="let schedule of schedules">
+      schedule events {{schedule.events.length}}
+    </div>
+    <a (click)="addSchedule()" href="#">Add new schedule.</a>
   </div>
-</form>
-
+  <div class="buttons">
+    <input type="submit" (click)="recipeData.doSubmit()" [disabled]="!valid"
+           value="Сохранить">
+  </div>
+</div>
+<div *ngIf="mode == 'schedule'">
+  <app-schedule-edit #scheduleEditComponent (createSchedule)="onCreateSchedule(scheduleEditComponent, $event)"></app-schedule-edit>
+</div>

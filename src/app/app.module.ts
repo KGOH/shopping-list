@@ -13,6 +13,7 @@ import { ScheduleEditComponent } from './recipes/schedule-edit/schedule-edit.com
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { RecipeDataComponent } from './recipes/recipe-data/recipe-data.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     RecipeViewComponent,
     RecipeListComponent,
     RecipeEditComponent,
-    ScheduleEditComponent
+    ScheduleEditComponent,
+    RecipeDataComponent
   ],
   imports: [
     BrowserModule,
