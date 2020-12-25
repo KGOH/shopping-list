@@ -5,15 +5,35 @@
 }
 
 .header {
-  background-color: map-get($mat-deep-purple, 600);
+  background-color: map-get($mat-deep-orange, 900);
+  color: mat-contrast($mat-deep-orange, 900);
 
   li {
     display: inline-block;
   }
 
-  &, a {
-    color: mat-contrast($mat-deep-purple, 600);
+  h2, nav {
+    display: inline-block;
   }
+
+  nav {
+    a {
+      color: mat-contrast($mat-deep-orange, 900);
+      display: inline-block;
+      padding: 0 8px;
+      font-size: 17px;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.content {
+  background-color: map-get($mat-orange, 200);
+  margin-bottom: 0;
 }
 
 .header, .content {
