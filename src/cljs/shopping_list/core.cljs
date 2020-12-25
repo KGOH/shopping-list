@@ -83,3 +83,50 @@
                           (sp/transform [:events sp/MAP-VALS :dosage]
                                         #(* % (/ old-dosage new-dosage))))]
     (clj->js new-schedule)))
+
+
+(def schedule-event-type-enum
+  {:breakfast 0
+   :lunch     1
+   :dinner    2
+   :supper    3})
+
+
+(def schedule-event-type-time-of-day
+  (sp/transform
+   [sp/MAP-KEYS]
+   schedule-event-type-enum
+   {:breakfast 8
+    :lunch     12
+    :dinner    18
+    :supper    21}))
+
+
+(defn collect-events [recipies]
+  (for [recipe   recipies
+        course   (:courses recipe)
+        schedule (:schedules course)
+        event    (:events schedule)]
+    {:event       event
+     :time-of-day (+ (or (:timeOfDay event)
+                         (when-let [t (:type event)]
+                           (schedule-event-type-time-of-day t)))
+                     (/ (:timeOffset event 0) 60))
+     :start-date  (:startDate course)
+     :end-date    (:endDate course)
+     :package     (:package schedule)}))
+
+
+(defn ^:export schedule-for-a-day [date recipies*]
+  (->> (js->clj recipies* :keywordize-keys true)
+       collect-events
+       (filterv #(and (<= date (or (:end-date %) date))
+                      (>= date (or (:start-date %) date))
+                      (if (and (contains? % :start-date)
+                               (contains? (:event %) :repeatInterval))
+                        (zero? (rem (- date (:start-date %))
+                                    (get-in % [:event :repeatInterval])))
+                        true)))
+       (sort-by :time-of-day)
+       (mapv #(select-keys % [:package :event]))
+       clj->js))
