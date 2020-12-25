@@ -1,7 +1,7 @@
 import {DrugPackage} from './Drug';
 
 export class Schedule {
-  public package: DrugPackage | undefined = undefined;
+  public package: DrugPackage | null = null;
   public dayOffset = 0;
   public events: ScheduleEvent[] = [];
 
