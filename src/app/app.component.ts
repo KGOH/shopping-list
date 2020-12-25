@@ -1,4 +1,5 @@
-import {AfterContentInit, Component} from '@angular/core';
+import {AfterContentChecked, AfterContentInit, Component} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
 declare const shopping_list: any;
 
@@ -9,6 +10,10 @@ declare const shopping_list: any;
 })
 export class AppComponent implements AfterContentInit {
   title = 'shopping-list';
+
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) {
+  }
+
 
   ngAfterContentInit(): void {
   }

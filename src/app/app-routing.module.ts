@@ -17,6 +17,9 @@ const routes: Routes = [
   },
   {
     path: 'calendar', component: CalendarComponent
+  },
+  {
+    path: '', redirectTo: 'calendar', pathMatch: 'full'
   }
 ];
 

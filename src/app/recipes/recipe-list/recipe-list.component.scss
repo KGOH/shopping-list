@@ -1,3 +1,9 @@
+@import '~@angular/material/theming';
+
+a {
+  color: mat-contrast($mat-orange, 200);
+}
+
 .toolbar {
   text-align: right;
 }
