@@ -218,9 +218,9 @@
 
 (defn format-event-time [event]
   (let [time-offset (:timeOffset event 0)
-        preposition (cond (neg? time-offset)  :before
-                          (zero? time-offset) :at
-                          (pos? time-offset)  :after)
+        preposition (cond (> -1 time-offset)    :before
+                          (<= -1 time-offset 1) :at
+                          (< 1 time-offset)     :after)
         offset      (when-not (zero? time-offset)
                       (Math/abs time-offset))
         time        (or (:timeOfDay event)
@@ -229,18 +229,18 @@
         num?        (contains? event :timeOfDay)]
     (->> [(case preposition
             :before "за"
-            :at     "в"
+            :at     (if word? "во время" "в")
             :after  "через"
             nil)
-          (when offset [offset (get-num-ending offset minute-forms)])
+          (when (and offset (not= 1 offset))
+            [offset
+             (get-num-ending offset minute-forms)])
           (case preposition
             :before "до"
             :at     nil
             :after  "после"
             nil)
-          (cond-> time
-            (and word? (some #{preposition} [:before :after]))
-            (str "а"))
+          (cond-> time word? (str "а"))
 
           (when-let [t (and num? (:timeOfDay event))]
             (get-num-ending t hour-forms))]
