@@ -85,6 +85,10 @@
     (clj->js new-schedule)))
 
 
+(defn enum [enum-table hmap]
+  (sp/transform [sp/MAP-KEYS] enum-table hmap))
+
+
 (def schedule-event-type-enum
   {:breakfast 0
    :lunch     1
@@ -92,14 +96,24 @@
    :supper    3})
 
 
+(defn enum-schedule-event-type [hmap]
+  (enum schedule-event-type-enum hmap))
+
+
 (def schedule-event-type-time-of-day
-  (sp/transform
-   [sp/MAP-KEYS]
-   schedule-event-type-enum
+  (enum-schedule-event-type
    {:breakfast 8
     :lunch     12
     :dinner    18
     :supper    21}))
+
+
+(def schedule-event-type-display
+  (enum-schedule-event-type
+   {:breakfast "завтрак"
+    :lunch     "полдник"
+    :dinner    "обед"
+    :supper    "ужин"}))
 
 
 (defn collect-events [recipies]
@@ -129,4 +143,60 @@
                         true)))
        (sort-by :time-of-day)
        (mapv #(select-keys % [:package :event]))
+       clj->js))
+
+
+(defn format-event-package [{:keys [drug] :as package} event]
+  (->> [(:name drug)
+        (:dosage package)
+        (str (or (:shortName package)
+                 (:fullName package))
+             ",")
+        (:dosage event)
+        "шт."]
+       (remove nil?)
+       (str/join \space)
+       str/capitalize))
+
+
+(defn format-event-time [event]
+  (let [time-offset (:timeOffset event 0)
+        preposition (cond (neg? time-offset)  :before
+                          (zero? time-offset) :at
+                          (pos? time-offset)  :after)
+        offset      (when-not (zero? time-offset)
+                      (Math/abs time-offset))
+        time        (or (:timeOfDay event)
+                        (schedule-event-type-display (:type event)))
+        word?       (contains? event :type)]
+    (->> [(case preposition
+            :before "за"
+            :at     "в"
+            :after  "через"
+            nil)
+          (when offset [offset "минут"])
+          (case preposition
+            :before "до"
+            :at     nil
+            :after  "после"
+            nil)
+          (cond-> time
+            (and word? (some #{preposition} [:before :after]))
+            (str "а"))
+
+          (when-not word? "часов")]
+         flatten
+         (remove nil?)
+         (str/join \space)
+         str/capitalize)))
+
+
+(defn ^:export formatted-schedule-for-a-day [date recipies*]
+  (->> (js->clj (schedule-for-a-day date recipies*) :keywordize-keys true)
+       (mapv #(-> %
+                  (update :event format-event-time)
+                  (update :package format-event-package (:event %))))
+       (partition-by :event)
+       (mapv #(-> {:event (-> % first :event)
+                   :drugs (mapv :package %)}))
        clj->js))
