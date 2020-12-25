@@ -1,6 +1,9 @@
 import {Injectable} from '@angular/core';
 import {filter as _filter, isArray, map as _map, toNumber} from 'lodash-es';
-import {ScheduleEvent, ScheduleEventType} from '../domain/Schedule';
+import {Schedule, ScheduleEvent, ScheduleEventType} from '../domain/Schedule';
+import {DrugPackage} from '../domain/Drug';
+
+declare const shopping_list: any;
 
 @Injectable({
   providedIn: 'root'
@@ -155,5 +158,12 @@ export class ScheduleService {
       timeOffset: ScheduleService.parseTimeOffset(groups.eventAt, groups.eventBefore, groups.eventAfter),
       type: ScheduleService.parseEventType(groups.eventName)
     });
+  }
+
+  recalculateSchedules(schedule: Schedule, drugPackage: DrugPackage): void {
+    const scheduleObj = Object.assign({}, schedule);
+    console.log(scheduleObj, Object.assign({}, drugPackage));
+    const modifiedSchedule = shopping_list.core.reeval_schedule(scheduleObj, Object.assign({}, drugPackage));
+    console.log(modifiedSchedule);
   }
 }

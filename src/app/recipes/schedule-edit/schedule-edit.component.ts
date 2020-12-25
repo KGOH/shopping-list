@@ -87,4 +87,9 @@ export class ScheduleEditComponent implements OnInit, DoCheck {
       this.selectedDrugPackage = this.filteredDrugPackages.value[0];
     }
   }
+
+  onPackageSelected(drugPackage: DrugPackage|null): void {
+    if (drugPackage === null) { return; }
+    this.scheduleService.recalculateSchedules(this.schedule, drugPackage);
+  }
 }

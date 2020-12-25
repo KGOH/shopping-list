@@ -16,7 +16,7 @@
       </mat-autocomplete>
     </mat-form-field>
     <mat-form-field>
-      <mat-select [(value)]="selectedDrugPackage">
+      <mat-select [(value)]="selectedDrugPackage" (selectionChange)="onPackageSelected($event.value)">
         <mat-label>Упаковка</mat-label>
         <mat-option *ngFor="let drugPackage of filteredDrugPackages | async" [value]="drugPackage">
           {{drugPackage.displayName}}
