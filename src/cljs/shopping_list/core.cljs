@@ -168,7 +168,8 @@
                       (Math/abs time-offset))
         time        (or (:timeOfDay event)
                         (schedule-event-type-display (:type event)))
-        word?       (contains? event :type)]
+        word?       (contains? event :type)
+        num?        (contains? event :timeOfDay)]
     (->> [(case preposition
             :before "за"
             :at     "в"
@@ -184,7 +185,16 @@
             (and word? (some #{preposition} [:before :after]))
             (str "а"))
 
-          (when-not word? "часов")]
+          (when-let [t (and num? (:timeOfDay event))]
+            (cond
+              (or (= 0 t) (<= 5 t 20))
+              "часов"
+
+              (= 1 (mod (Math/abs t) 10))
+              "час"
+
+              (or (<= 2 (mod (Math/abs t) 10) 4))
+              "часа"))]
          flatten
          (remove nil?)
          (str/join \space)
