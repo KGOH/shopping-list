@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {RecipeListComponent} from './recipes/recipe-list/recipe-list.component';
 import {RecipeEditComponent} from './recipes/recipe-edit/recipe-edit.component';
 import {ScheduleEditComponent} from './recipes/schedule-edit/schedule-edit.component';
+import {CalendarComponent} from './calendar/calendar/calendar.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,9 @@ const routes: Routes = [
   },
   {
     path: 'recipes/new/schedules/new', component: ScheduleEditComponent
+  },
+  {
+    path: 'calendar', component: CalendarComponent
   }
 ];
 

@@ -16,6 +16,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { RecipeDataComponent } from './recipes/recipe-data/recipe-data.component';
 import {MatSelectModule} from '@angular/material/select';
 import { ScheduleEventPipe } from './filters/schedule-event.pipe';
+import { CalendarComponent } from './calendar/calendar/calendar.component';
+import { CalendarDayComponent } from './calendar/calendar-day/calendar-day.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { ScheduleEventPipe } from './filters/schedule-event.pipe';
     RecipeEditComponent,
     ScheduleEditComponent,
     RecipeDataComponent,
-    ScheduleEventPipe
+    ScheduleEventPipe,
+    CalendarComponent,
+    CalendarDayComponent
   ],
   imports: [
     BrowserModule,

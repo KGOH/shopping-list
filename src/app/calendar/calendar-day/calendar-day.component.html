@@ -1,0 +1,7 @@
+<h2>{{title}}</h2>
+<div *ngFor="let calendarEvent of calendarEvents">
+  <h3>{{calendarEvent.event}}</h3>
+  <div *ngFor="let drug of calendarEvent.drugs">
+    {{drug}}
+  </div>
+</div>
