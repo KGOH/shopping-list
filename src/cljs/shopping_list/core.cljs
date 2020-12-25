@@ -170,6 +170,10 @@
      :package     (:package schedule)}))
 
 
+(defn days [ms]
+  (quot ms 86400000))
+
+
 (defn ^:export schedule-for-a-day [date recipies*]
   (->> (my-js->clj recipies* :keywordize-keys true)
        collect-events
@@ -177,7 +181,7 @@
                       (>= date (or (:start-date %) date))
                       (if (and (contains? % :start-date)
                                (contains? (:event %) :repeatInterval))
-                        (zero? (rem (- date (:start-date %))
+                        (zero? (mod (days (- date (:start-date %)))
                                     (get-in % [:event :repeatInterval])))
                         true)))
        (sort-by :time-of-day)
