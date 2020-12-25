@@ -1,3 +1,9 @@
 :host {
   display: block;
 }
+
+form {
+  mat-form-field {
+    width: 400px;
+  }
+}

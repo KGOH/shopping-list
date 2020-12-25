@@ -5,7 +5,7 @@ import {toNumber, map as _map, filter as _filter, isArray} from 'lodash-es';
   providedIn: 'root'
 })
 export class ScheduleService {
-  static regex = /^(?<dosageCount>\d+)(?: (?<dosageUnit>таблет(?:ка|ки|ок)|капсул[а|ы]?)(?: ((?<daily>каждый день)|каждые (?<intervalDays>(?:[1-9]\d+|[2-9]))(?<intervalDaysSuffix> дн(?:я|ей))?)(?: (до|после|во время|за \d+ минуты? до|через \d+ минуты? после)(?: (завтрака|полдника|обеда|ужина))?)?)?)?/;
+  static regex = /^(?<dosageCount>\d+)(?: (?<dosageUnit>таблет(?:ка|ки|ок)|капсул[а|ы]?)(?: ((?<daily>каждый день)|каждые (?<intervalDays>(?:[1-9]\d+|[2-9]))(?<intervalDaysSuffix> дн(?:я|ей))?)(?: (?:(?<eventAt>до|после|во время)|за (?<eventBefore>(?:[1-9]\d+|[2-9]))(?<eventBeforeSuffix> минуты? до)?|через (?<eventAfter>(?:[1-9]\d+|[2-9]))(?<eventAfterSuffix> минуты? после)?)(?: (?<eventName>завтрака|полдника|обеда|ужина))?)?)?)?/;
 
   constructor() { }
 
@@ -20,7 +20,7 @@ export class ScheduleService {
       count = undefined;
     }
     if (count === undefined) {
-      return [['X таблеток', ''], ['X капсул', '']];
+      return ['1 таблетка', '1 капсула', ['X таблеток', ''], ['X капсул', '']];
     } else if (count === 1) {
       return [' таблетка', ' капсула'];
     } else if (this.isFew(count)) {
@@ -43,11 +43,19 @@ export class ScheduleService {
     }
   }
 
-  private static generateEventSuggestions(offset: number|undefined): (string|[string, string])[] {
+  private static generateEventAtSuggestions(offset: number|undefined): (string|[string, string])[] {
     if (offset === undefined) {
-      return [' до', ' после', 'во время', [' за X минут до', ' за'], [' через X минут после', ' через ']];
+      return [' до', ' после', ' во время', [' за X минут до', ' за '], [' через X минут после', ' через ']];
+    } else if (offset < 0) {
+      return this.isFew(-offset) ? [' минуты до '] : [' минут до'];
+    } else if (offset > 0) {
+      return this.isFew(offset) ? [' минуты после '] : [' минут после'];
     }
     return [];
+  }
+
+  private static generateEventSuggestions(): (string|[string, string])[] {
+    return [' завтрака', ' полдника', ' обеда', ' ужина'];
   }
 
   generateSuggestions(text: string): [string, string][] {
@@ -62,18 +70,29 @@ export class ScheduleService {
   }
 
   generateSuggestionsInternal(match: RegExpExecArray|null): (string|[string, string])[] {
-    if (match == null || match.groups === undefined)
+    const groups = match && match.groups || undefined;
+    if (groups === undefined)
     {
       return ScheduleService.generateDosageSuggestions(undefined);
     }
-    else if (match.groups.dosageUnit === undefined)
+    else if (groups.dosageUnit === undefined)
     {
-      return ScheduleService.generateDosageSuggestions(toNumber(match.groups.dosageCount));
+      return ScheduleService.generateDosageSuggestions(toNumber(groups.dosageCount));
     }
-    else if (match.groups.daily === undefined && match.groups.intervalDaysSuffix === undefined)
+    else if (groups.daily === undefined && groups.intervalDaysSuffix === undefined)
     {
-      const count = match.groups.intervalDays !== undefined ? toNumber(match.groups.intervalDays) : undefined;
+      const count = groups.intervalDays !== undefined ? toNumber(groups.intervalDays) : undefined;
       return ScheduleService.generateIntervalSuggestions(count);
+    }
+    else if (groups.eventAt === undefined && groups.eventBeforeSuffix === undefined && groups.eventAfterSuffix === undefined)
+    {
+      const count = groups.eventBefore !== undefined ? -toNumber(groups.eventBefore) :
+        (groups.eventAfter !== undefined ? toNumber(groups.eventAfter) : undefined);
+      return ScheduleService.generateEventAtSuggestions(count);
+    }
+    else if (groups.eventName === undefined)
+    {
+      return ScheduleService.generateEventSuggestions();
     }
 
     return [];

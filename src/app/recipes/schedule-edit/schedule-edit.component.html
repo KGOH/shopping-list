@@ -5,10 +5,11 @@
       <input type="text"
              placeholder="Медикамент"
              aria-label="Number"
+             (change)="checkAutoSubmit()"
              matInput
              formControlName="drug"
              [matAutocomplete]="auto">
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="drugName">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="drugName" (optionSelected)="checkAutoSubmit()">
         <mat-option *ngFor="let drug of filteredDrugs | async" [value]="drug">
           {{drug.name}}
         </mat-option>
@@ -18,8 +19,10 @@
   <p>
     <mat-form-field>
       <input type="text"
-             placeholder="Прием"
+             class="schedule-input"
+             placeholder="Расписание"
              aria-label="Number"
+             (change)="checkAutoSubmit()"
              #scheduleInput
              matInput
              [formControl]="scheduleControl"

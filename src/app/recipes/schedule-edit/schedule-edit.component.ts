@@ -6,7 +6,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {map, mergeMap, startWith} from 'rxjs/operators';
 import {DrugService} from '../../drug.service';
 import {ScheduleService} from '../schedule.service';
-import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-schedule',
@@ -17,6 +17,7 @@ export class ScheduleEditComponent implements OnInit {
   @Input() public schedule!: Schedule;
   @ViewChild('scheduleInput', { read: MatAutocompleteTrigger }) scheduleAutocompleteTrigger!: MatAutocompleteTrigger;
 
+  private lastSuggestions: [string, string][] = [];
   private drugControl = new FormControl();
   public scheduleControl = new FormControl();
   public form = new FormGroup({
@@ -32,8 +33,11 @@ export class ScheduleEditComponent implements OnInit {
       mergeMap(value => this.drugService.searchByName(value))
     );
     this.filteredSchedules = this.scheduleControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this.scheduleService.generateSuggestions(value))
+      startWith(this.scheduleControl.value as string || ''),
+      map(value => {
+        this.lastSuggestions = this.scheduleService.generateSuggestions(value);
+        return this.lastSuggestions;
+      })
     );
   }
   public drugName(drug: Drug): string {
@@ -41,9 +45,14 @@ export class ScheduleEditComponent implements OnInit {
   }
 
   onScheduleSelected(): void {
-    window.requestAnimationFrame(() => this.scheduleAutocompleteTrigger.openPanel());
+    window.requestAnimationFrame(() => {
+      this.checkAutoSubmit();
+      this.scheduleAutocompleteTrigger.openPanel();
+    });
   }
-  suggestionDisplay(suggestion: [string, string]|null): string {
-    return suggestion !== null ? suggestion[1] : '';
+  checkAutoSubmit(): void {
+    if (this.drugControl.value && this.scheduleService.generateSuggestions(this.scheduleControl.value).length === 0) {
+      console.log('submit!');
+    }
   }
 }
