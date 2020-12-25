@@ -3,8 +3,8 @@ import {Schedule} from '../../domain/Schedule';
 import {Drug} from '../../domain/Drug';
 import {from, Observable} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
-import {filter} from 'lodash-es';
+import {mergeMap, startWith} from 'rxjs/operators';
+import {DrugService} from '../../drug.service';
 
 @Component({
   selector: 'app-schedule',
@@ -18,18 +18,15 @@ export class ScheduleComponent implements OnInit {
     drug: this.drugControl
   });
   public filteredDrugs: Observable<Drug[]> = from([[]]);
-  constructor() { }
+  constructor(private drugService: DrugService) { }
 
   ngOnInit(): void {
     this.filteredDrugs = this.drugControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value))
+      mergeMap(value => this.drugService.searchByName(value))
     );
   }
   public drugName(drug: Drug): string {
     return drug && drug.name;
-  }
-  private _filter(value: string): Drug[] {
-    return filter([new Drug('Аспирин'), new Drug('Активированный уголь')], x => x.name.startsWith(value));
   }
 }
