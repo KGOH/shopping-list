@@ -50,3 +50,14 @@
       (search* "smnn"
                {:params {:trade_name_id trade-name-id}
                 :handler (comp callback clj->js handle-smnn-resp)}))))
+
+
+(defn ^:export reeval-schedule [schedule* new-dosage]
+  (let [schedule (js->clj schedule* :keywordize-keys true)
+        update-dosage (fn [schedule-event]
+                        (-> schedule-event
+                            (assoc-in [:dosage :value] new-dosage)
+                            (update-in [:dosage :count] * (/ (get-in schedule-event [:dosage :value])
+                                                             new-dosage))))
+        new-schedule (update schedule :events (partial mapv update-dosage))]
+    (clj->js new-schedule)))
