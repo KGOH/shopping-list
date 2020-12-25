@@ -6,7 +6,7 @@ import {ScheduleEvent, ScheduleEventType} from '../domain/Schedule';
   providedIn: 'root'
 })
 export class ScheduleService {
-  static regex = /^(?<dosageCount>\d+)(?: (?<dosageUnit>таблет(?:ка|ки|ок)|капсул[а|ы]?)(?: ((?<daily>каждый день)|каждые (?<intervalDays>(?:[1-9]\d+|[2-9]))(?<intervalDaysSuffix> дн(?:я|ей))?)(?: (?:(?<eventAt>до|после|во время)|за (?<eventBefore>(?:[1-9]\d+|[2-9]))(?<eventBeforeSuffix> минуты? до)?|через (?<eventAfter>(?:[1-9]\d+|[2-9]))(?<eventAfterSuffix> минуты? после)?)(?: (?<eventName>завтрака|полдника|обеда|ужина))?)?)?)?/;
+  static regex = /^(?<dosageCount>\d+)(?: (?<dosageUnit>доз[аы]?)(?: ((?<daily>каждый день)|каждые (?<intervalDays>(?:[1-9]\d+|[2-9]))(?<intervalDaysSuffix> дн(?:я|ей))?)(?: (?:(?<eventAt>до|после|во время)|за (?<eventBefore>(?:[1-9]\d+|[2-9]))(?<eventBeforeSuffix> минуты? до)?|через (?<eventAfter>(?:[1-9]\d+|[2-9]))(?<eventAfterSuffix> минуты? после)?)(?: (?<eventName>завтрака|полдника|обеда|ужина))?)?)?)?/;
 
   constructor() { }
 
@@ -21,13 +21,13 @@ export class ScheduleService {
       count = undefined;
     }
     if (count === undefined) {
-      return ['1 таблетка', '1 капсула', ['X таблеток', ''], ['X капсул', '']];
+      return ['1 доза', ['X доз', '']];
     } else if (count === 1) {
-      return [' таблетка', ' капсула'];
+      return [' доза'];
     } else if (this.isFew(count)) {
-      return [' таблетки', ' капсулы'];
+      return [' дозы'];
     } else {
-      return [' таблеток', ' капсул'];
+      return [' доз'];
     }
   }
 
