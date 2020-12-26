@@ -15,6 +15,7 @@ export class CalendarDayComponent implements OnInit {
 
   ngOnInit(): void {
     this.calendarEvents = this.calendarService.getCalendarEvents(this.date);
+    console.log(this.calendarEvents);
   }
 
 }

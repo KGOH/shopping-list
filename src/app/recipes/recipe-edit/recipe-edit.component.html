@@ -1,17 +1,16 @@
 <div [hidden]="mode != 'data'">
   <app-recipe-data [recipe]="recipe" #recipeData (save)="onRecipeSave()"></app-recipe-data>
   <p *ngIf="this.schedules.length == 0">
-    You need to <a (click)="addSchedule()" href="#">add</a> at least one schedule.
+    Вы должны <a (click)="addSchedule()" href="#">добавить</a> хотя бы одно расписание приема лекарства.
   </p>
   <div *ngIf="schedules.length > 0">
-    <h3>Schedules</h3>
+    <h3>Расписания<div class="new-link"><a (click)="addSchedule()" href="#">Новое расписание.</a></div></h3>
     <div *ngFor="let schedule of schedules">
-      <div>{{schedule.package?.drug?.name}}, {{schedule.package?.displayName}}</div>
-      <div *ngFor="let event of schedule.events">
+      <div class="drug-title">{{schedule.package?.drug?.name}}, {{schedule.package?.displayName}}</div>
+      <div class="schedule-event" *ngFor="let event of schedule.events">
         {{event|scheduleEvent}}
       </div>
     </div>
-    <a (click)="addSchedule()" href="#">Add new schedule.</a>
   </div>
   <div class="buttons">
     <input type="submit" (click)="recipeData.doSubmit()" [disabled]="!valid" value="Сохранить">

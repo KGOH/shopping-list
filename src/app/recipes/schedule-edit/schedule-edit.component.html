@@ -1,4 +1,4 @@
-<h2>New Schedule</h2>
+<h2>Новое расписание</h2>
 <form [formGroup]="form" (submit)="onSubmit()">
   <p>
     <mat-form-field>
@@ -16,8 +16,8 @@
       </mat-autocomplete>
     </mat-form-field>
     <mat-form-field>
+      <mat-label>Упаковка</mat-label>
       <mat-select [(value)]="selectedDrugPackage" (selectionChange)="onPackageSelected($event.value)">
-        <mat-label>Упаковка</mat-label>
         <mat-option *ngFor="let drugPackage of filteredDrugPackages | async" [value]="drugPackage">
           {{drugPackage.displayName}}
         </mat-option>
